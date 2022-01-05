@@ -1,5 +1,5 @@
-from models import User, Pair
-from utils import generate_password
+from .models import User, Pair
+from .utils import generate_password
 
 
 def get_user(user_id):
