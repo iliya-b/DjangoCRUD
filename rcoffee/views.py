@@ -8,6 +8,7 @@ from DjangoCRUD import settings
 from rcoffee.tg_views.tg_view import generate_tg_routes
 from rcoffee.tg_views.welcome_view import WelcomeView
 
+
 def index():
     return ''
 
@@ -24,13 +25,9 @@ def webhook(request):
 
 
 SMTP = False
-ADMINS = []
+ADMINS = [settings.ADMINS]
 
-logger = telebot.logger
-telebot.logger.setLevel(logging.INFO)
 bot = telebot.TeleBot(settings.TG_BOT_TOKEN)
-
-
 routes = generate_tg_routes(bot, default_view=WelcomeView)
 
 bot.add_custom_filter(custom_filters.StateFilter(bot))

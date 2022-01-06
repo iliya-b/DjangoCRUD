@@ -1,5 +1,7 @@
 import json
 
+# Here we have mini-framework on top of telebot
+
 
 class TgView:
 
@@ -40,7 +42,7 @@ class TgView:
 
 
 def generate_tg_routes(bot, default_view, callbacks=None, commands=None):
-    routes = []
+    routes = []  # todo: import all automatically
     from rcoffee.tg_views.change_profile_view import ChangeProfileView
     from rcoffee.tg_views.enter_email_view import EnterEmailView
     from rcoffee.tg_views.enter_password_view import EnterPasswordView
@@ -64,7 +66,6 @@ def generate_tg_routes(bot, default_view, callbacks=None, commands=None):
 
             uid = message.chat.id
             state = bot.get_state(uid) or default_state
-            print('request', state)
 
             state = json.loads(state)
             _view = _locals.get(state['cls'])(bot, uid, state['args'])

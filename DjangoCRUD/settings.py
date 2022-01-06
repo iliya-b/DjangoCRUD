@@ -37,6 +37,7 @@ BASE_URL = env('BASE_URL')
 
 ALLOWED_HOSTS = [env('BASE_HOST'), '127.0.0.1']
 
+ADMINS = env('ADMINS').split(',')
 
 # Application definition
 
