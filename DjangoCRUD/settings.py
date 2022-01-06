@@ -35,7 +35,7 @@ DEBUG = env('DEBUG')
 
 BASE_URL = env('BASE_URL')
 
-ALLOWED_HOSTS = [env('BASE_HOST')]
+ALLOWED_HOSTS = [env('BASE_HOST'), '127.0.0.1']
 
 
 # Application definition
@@ -137,3 +137,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 TG_BOT_TOKEN = env('TG_BOT_TOKEN')
+
+

@@ -1,3 +1,5 @@
+from django.utils.timezone import now
+
 from .models import User, Pair
 from .utils import generate_password
 
@@ -23,6 +25,7 @@ def create_user(user_id):
         User.objects.create(
             telegram_id=user_id,
             password=generate_password(),
+            created_at=now()
         )
 
 

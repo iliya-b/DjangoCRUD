@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.db.models import Model
 
@@ -10,7 +12,7 @@ class AdminsManager(models.Manager):
 class User(models.Model):
     telegram_id = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
-    name = models.CharField(max_length=255)
+    name = models.CharField('Name', max_length=255)
     link = models.CharField(max_length=255)
     work = models.TextField()
     about = models.TextField()
@@ -18,11 +20,19 @@ class User(models.Model):
     is_active = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(default=datetime.now)
+    updated_at = models.DateTimeField(auto_now=True)
 
+    objects = models.Manager()
     admins = AdminsManager()
-    object = models.Manager()
+
+    def __repr__(self):
+        return (f'{self.name}\n'
+                f'*Профиль:* {self.link}\n\n'
+                f'*Чем занимается:* {self.work}\n'
+                f'*Зацепки для начала разговора:* {self.about}\n\n'
+                f'Напиши собеседнику в Telegram – [{self.name}](tg://user?id={self.telegram_id})')
+
 
 class Pair(models.Model):
     user_a = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='+')
