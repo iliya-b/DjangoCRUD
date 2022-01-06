@@ -26,7 +26,7 @@ class WelcomeView(TgView):
 
     def back(self, message):
         self.args['base_message'] = message.id
-        self.action()
+        self.onStart()
 
     def show(self, message):
         user = get_user(self.user_id)
@@ -43,7 +43,7 @@ class WelcomeView(TgView):
                 callback_data='back'
             )
         )
-        self.bot.send_chat_action(self.user_id, 'typing')
+        self.bot.send_chat_onStart(self.user_id, 'typing')
         self.bot.edit_message_text(answer, self.user_id, message_id=message.id, parse_mode='Markdown',
                                    reply_markup=keyboard)
 
@@ -55,9 +55,9 @@ class WelcomeView(TgView):
         set_field(self.user_id, 'is_active', True)
         self.bot.send_message(self.user_id, "Готово")
 
-    def action(self):
+    def onStart(self):
         user_id = self.user_id
-        self.bot.send_chat_action(user_id, 'typing')
+        self.bot.send_chat_onStart(user_id, 'typing')
         text = 'Выбери подходящую опцию ниже'
 
         base_msg = self.args.pop('base_message', None)  # pop to sure edit message just once
@@ -74,14 +74,14 @@ class WelcomeView(TgView):
         self.change_view(ChangeProfileView(self.bot, self.user_id, {'base_message': message.id}))
 
     def help(self, _):
-        self.action()
+        self.onStart()
 
     def onMessage(self, message):
         from rcoffee.tg_views.enter_email_view import EnterEmailView
 
         user_id = self.user_id
         user = get_user(user_id)
-        self.bot.send_chat_action(user_id, 'typing')
+        self.bot.send_chat_onStart(user_id, 'typing')
 
         if (not user or not user.is_verified) and message.from_user.username not in rcoffee.views.ADMINS:
             create_user(user_id)

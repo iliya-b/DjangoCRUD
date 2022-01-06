@@ -5,7 +5,7 @@ from rcoffee.utils import is_correct_mail
 
 class EnterEmailView(TgView):
 
-    def action(self):
+    def onStart(self):
         self.bot.send_message(self.user_id,
                               ('Введи свой корпоративный mail, '
                                'чтобы получить пароль📧'))
@@ -38,7 +38,7 @@ class EnterEmailView(TgView):
         if is_correct_mail(mail):
             self.change_view(EnterPasswordView(self.bot, user_id))
         else:
-            self.action()
+            self.onStart()
 
     def keyboard(self):
         pass

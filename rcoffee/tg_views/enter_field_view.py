@@ -27,7 +27,7 @@ class EnterFieldView(TgView):
     def back(self, message):
         self.change_view(rcoffee.tg_views.change_profile_view.ChangeProfileView(self.bot, self.user_id, {'base_message': message.id}))
 
-    def action(self):
+    def onStart(self):
         self.bot.send_message(self.user_id, EnterFieldView.messages[self.args['field']])
 
     def onMessage(self, message):

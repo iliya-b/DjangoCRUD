@@ -5,7 +5,7 @@ from rcoffee.views import SMTP
 
 class EnterPasswordView(TgView):
 
-    def action(self):
+    def onStart(self):
         if SMTP:
             answer = ('Отправил📮\n'
                       'Введи пароль из письма🔑')

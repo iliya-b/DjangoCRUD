@@ -24,7 +24,7 @@ class ChangeProfileView(TgView):
     def moveToField(self, message, field):
         self.change_view(rcoffee.tg_views.enter_field_view.EnterFieldView(self.bot, self.user_id, {'field': field}))
 
-    def action(self):
+    def onStart(self):
         self.bot.edit_message_text('👉 Поменять данные профиля', self.user_id, self.args['base_message'],
                                    reply_markup=self.keyboard())
 

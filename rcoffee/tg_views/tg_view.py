@@ -24,7 +24,7 @@ class TgView:
             'args': self.args
         })
 
-    def action(self):
+    def onStart(self):
         pass
 
     def onData(self, message):
@@ -38,7 +38,7 @@ class TgView:
 
     def change_view(self, _view):
         self.bot.set_state(self.user_id, repr(_view))
-        _view.action()
+        _view.onStart()
 
 
 def generate_tg_routes(bot, default_view, callbacks=None, commands=None):
