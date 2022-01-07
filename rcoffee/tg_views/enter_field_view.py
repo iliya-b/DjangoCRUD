@@ -12,10 +12,7 @@ class EnterFieldView(TgView):
         'name': 'Как тебя зовут?',
         'about': 'Напиши о себе',
         'work': 'Чем ты занимаешься?',
-        'link': 'Пришли ссылку на свой профиль '
-                'в любой социальной сети. '
-                'Так вы в паре сможете лучше узнать '
-                'друг о друге до встречи🔎'
+        'link': 'Пришли ссылку'
     }
 
     @staticmethod
@@ -29,17 +26,20 @@ class EnterFieldView(TgView):
         self.change_view(ChangeProfileView, {'base_message': message.id})
 
     def onStart(self):
-        self.bot.send_message(self.user_id, EnterFieldView.messages[self.args['field']])
+        self.bot.send_message(
+            self.user_id, EnterFieldView.messages[self.args['field']])
 
     def onMessage(self, message):
         from rcoffee.tg_views.welcome_view import WelcomeView
         set_field(self.user_id, self.args['field'], message.text)
 
         if not self.args.get('is_onboarding', False):
-            self.bot.send_message(self.user_id, 'Готово', reply_markup=self.keyboard())
+            self.bot.send_message(self.user_id, 'Готово',
+                                  reply_markup=self.keyboard())
         elif self.args['field'] == 'name':
             self.bot.send_message(self.user_id, 'Рад познакомиться!)')
-            self.change_view(EnterFieldView, {'field': 'link', 'is_onboarding': True})
+            self.change_view(EnterFieldView, {
+                             'field': 'link', 'is_onboarding': True})
         else:
             msg = ('Отлично, все готово!✨\n\n'
                    'Свою пару для встречи ты будешь узнавать'
