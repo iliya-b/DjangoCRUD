@@ -25,7 +25,7 @@ def webhook(request):
 
 
 SMTP = False
-ADMINS = [settings.ADMINS]
+ADMINS = settings.ADMINS
 
 bot = telebot.TeleBot(settings.TG_BOT_TOKEN)
 routes = generate_tg_routes(bot, default_view=WelcomeView)

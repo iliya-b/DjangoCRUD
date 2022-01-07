@@ -52,42 +52,38 @@ def generate_tg_routes(bot, default_view, callbacks=None, commands=None):
     _locals = locals()
     default_state = json.dumps({'cls': default_view.__name__, 'args': {}})
 
-    # common handler for commands, callbacks and messages
-    def handler(type):
-        def _handler(call):
-            if type == 'callback':
-                message = call.message
-                name = call.data
-            elif type == 'command':
-                message = call
-                name = message.text[1:]
-            else:
-                name = message = call
+    def get_view(uid):
+        state = bot.get_state(uid) or default_state
+        state = json.loads(state)
+        return _locals.get(state['cls'])(bot, uid, state['args'])
 
-            uid = message.chat.id
-            state = bot.get_state(uid) or default_state
+    def callback_handler(call):
+        message = call.message
+        name = call.data
+        view = get_view(message.chat.id)
+        if name in view.callbacks():
+            bot.answer_callback_query(call.id)
+            view.callbacks()[name](view, message)
 
-            state = json.loads(state)
-            _view = _locals.get(state['cls'])(bot, uid, state['args'])
+    def command_handler(message):
+        name = message.text[1:]
+        view = get_view(message.chat.id)
+        if name in view.commands():
+            view.commands()[name](view, message)
 
-            if type == 'command' and name in _view.commands():
-                _view.commands()[name](_view, message)
-            if type == 'callback' and name in _view.callbacks():
-                bot.answer_callback_query(call.id)
-                _view.callbacks()[name](_view, message)
-            if type == 'message':
-                _view.onMessage(message)
-        return _handler
+    def message_handler(message):
+        get_view(message.chat.id)\
+            .onMessage(message)
 
     # 1. listening for callbacks
     dec = bot.callback_query_handler(func=lambda call: True)
-    routes.append(dec(handler('callback')))
+    routes.append(dec(callback_handler))
 
     # 2. listening for commands
     dec = bot.message_handler(regexp=r'^/(\w+)$')
-    routes.append(dec(handler('command')))
+    routes.append(dec(command_handler))
 
     # 3. listening for other messages
     dec = bot.message_handler(state='*')
-    routes.append(dec(handler('message')))
+    routes.append(dec(message_handler))
     return routes
