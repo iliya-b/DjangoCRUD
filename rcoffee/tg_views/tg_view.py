@@ -27,14 +27,18 @@ class TgView:
     def onStart(self):
         pass
 
-    def onData(self, message):
-        pass
-
     def onMessage(self, message):
         pass
 
     def keyboard(self):
         pass
+
+    def clear_keyboard(self, message, option=''):
+        self.bot.edit_message_text(
+            f'{message.text}\n\n🐱 {option}',
+            self.user_id,
+            message.id
+        )
 
     def change_view(self, _view, args=None):
         view = _view(self.bot, self.user_id, args)

@@ -1,26 +1,27 @@
+from functools import partialmethod, partial
+
 from telebot import types
 
 from rcoffee.tg_views.tg_view import TgView
 from rcoffee.orm import set_field, get_user, create_user
-from tg_views.decorators import replace_keyboard_on_option
 
 
 class AskLanguage(TgView):
+    langs = {
+        'en': 'Английский',
+        'ru': 'Русский'
+    }
 
     @staticmethod
     def callbacks():
         return {
-            'language_code_en': AskLanguage.english,
-            'language_code_ru': AskLanguage.russian,
+            'language_code_en': partial(AskLanguage.switchLanguage, lang="en"),
+            'language_code_ru': partial(AskLanguage.switchLanguage, lang="ru"),
         }
 
-    @replace_keyboard_on_option('en')
-    def english(self, _):
-        self.bot.send_message(self.user_id, 'Английский')
-
-    @replace_keyboard_on_option('ru')
-    def russian(self, _):
-        self.bot.send_message(self.user_id, 'Русский')
+    def switchLanguage(self, message, lang):
+        self.clear_keyboard(message, option=lang)
+        self.bot.send_message(self.user_id, AskLanguage.langs[lang])
 
     def onMessage(self, _):
         answer = 'Какой язык?'
