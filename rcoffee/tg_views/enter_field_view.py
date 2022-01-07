@@ -25,19 +25,21 @@ class EnterFieldView(TgView):
         }
 
     def back(self, message):
-        self.change_view(rcoffee.tg_views.change_profile_view.ChangeProfileView(self.bot, self.user_id, {'base_message': message.id}))
+        from rcoffee.tg_views.change_profile_view import ChangeProfileView
+        self.change_view(ChangeProfileView, {'base_message': message.id})
 
     def onStart(self):
         self.bot.send_message(self.user_id, EnterFieldView.messages[self.args['field']])
 
     def onMessage(self, message):
+        from rcoffee.tg_views.welcome_view import WelcomeView
         set_field(self.user_id, self.args['field'], message.text)
 
         if not self.args.get('is_onboarding', False):
             self.bot.send_message(self.user_id, 'Готово', reply_markup=self.keyboard())
         elif self.args['field'] == 'name':
             self.bot.send_message(self.user_id, 'Рад познакомиться!)')
-            self.change_view(EnterFieldView(self.bot, self.user_id, {'field': 'link', 'is_onboarding': True}))
+            self.change_view(EnterFieldView, {'field': 'link', 'is_onboarding': True})
         else:
             msg = ('Отлично, все готово!✨\n\n'
                    'Свою пару для встречи ты будешь узнавать'
@@ -47,7 +49,7 @@ class EnterFieldView(TgView):
                    'Время и место вы выбираете сами\n\n'
                    'Если остались вопросы - /help!)')
             self.bot.send_message(self.user_id, msg)
-            self.change_view(rcoffee.tg_views.welcome_view.WelcomeView(self.bot, self.user_id))
+            self.change_view(WelcomeView)
 
     def keyboard(self) -> Optional[types.InlineKeyboardMarkup]:
         if not self.args.get('is_onboarding', False):

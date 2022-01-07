@@ -36,7 +36,7 @@ class EnterEmailView(TgView):
                                       answer_to_admin, parse_mode='Markdown')
 
         if is_correct_mail(mail):
-            self.change_view(EnterPasswordView(self.bot, user_id))
+            self.change_view(EnterPasswordView)
         else:
             self.onStart()
 

@@ -71,7 +71,7 @@ class WelcomeView(TgView):
 
     def changeProfile(self, message):
         from rcoffee.tg_views.change_profile_view import ChangeProfileView
-        self.change_view(ChangeProfileView(self.bot, self.user_id, {'base_message': message.id}))
+        self.change_view(ChangeProfileView, {'base_message': message.id})
 
     def help(self, _):
         self.onStart()
@@ -93,7 +93,7 @@ class WelcomeView(TgView):
                       'других участников🎲\n\n')
             self.bot.send_message(user_id, answer)
 
-            self.change_view(EnterEmailView(self.bot, user_id))
+            self.change_view(EnterEmailView)
         elif not user and message.from_user.username in rcoffee.views.ADMINS:
             create_user(user_id)
             set_field(user_id, 'is_admin', True)

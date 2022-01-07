@@ -19,10 +19,12 @@ class ChangeProfileView(TgView):
         }
 
     def back(self, message):
-        self.change_view(rcoffee.tg_views.welcome_view.WelcomeView(self.bot, self.user_id, {'base_message': message.id}))
+        from rcoffee.tg_views.welcome_view import WelcomeView
+        self.change_view(WelcomeView, {'base_message': message.id})
 
     def moveToField(self, message, field):
-        self.change_view(rcoffee.tg_views.enter_field_view.EnterFieldView(self.bot, self.user_id, {'field': field}))
+        from rcoffee.tg_views.enter_field_view import EnterFieldView
+        self.change_view(EnterFieldView, {'field': field})
 
     def onStart(self):
         self.bot.edit_message_text('👉 Поменять данные профиля', self.user_id, self.args['base_message'],

@@ -36,9 +36,10 @@ class TgView:
     def keyboard(self):
         pass
 
-    def change_view(self, _view):
-        self.bot.set_state(self.user_id, repr(_view))
-        _view.onStart()
+    def change_view(self, _view, args=None):
+        view = _view(self.bot, self.user_id, args)
+        self.bot.set_state(self.user_id, repr(view))
+        view.onStart()
 
 
 def generate_tg_routes(bot, default_view, callbacks=None, commands=None):

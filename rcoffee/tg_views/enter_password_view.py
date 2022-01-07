@@ -28,7 +28,7 @@ class EnterPasswordView(TgView):
             self.bot.send_message(user_id, answer)
 
             set_field(user_id, 'is_verified', True)
-            self.change_view(EnterFieldView(self.bot, user_id, {'field': 'name', 'is_onboarding': True}))
+            self.change_view(EnterFieldView, {'field': 'name', 'is_onboarding': True})
         else:
             answer = 'Попробуй еще раз\n'
             self.bot.send_message(user_id, answer)
