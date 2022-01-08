@@ -16,11 +16,9 @@ class User(models.Model):
     link = models.CharField(max_length=255, blank=True)
     work = models.TextField(blank=True)
     about = models.TextField(blank=True)
-    password = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
-    is_verified = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
-    companies = models.ManyToManyField('Company')
+    teams = models.ManyToManyField('Team')
 
     created_at = models.DateTimeField(default=datetime.now)
     updated_at = models.DateTimeField(auto_now=True)
@@ -39,24 +37,26 @@ class User(models.Model):
         return "User %s (%d)" % (self.name, self.id)
 
 
-class Company(models.Model):
+class Team(models.Model):
     name = models.CharField('Name', max_length=100, null=False, unique=True)
-    password = models.CharField(max_length=255, null=False)
+    password = models.CharField(max_length=255, null=False, unique=True)
     admin = models.ForeignKey(User, on_delete=models.RESTRICT, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return "Company %s (%d)" % (self.name, self.id)
+        return "Team %s (%d)" % (self.name, self.id)
 
     class Meta:
-        verbose_name_plural = 'Companies'
+        verbose_name_plural = 'Teams'
 
 
 class Pair(models.Model):
-    user_a = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='+')
-    user_b = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='+')
+    user_a = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name='+')
+    user_b = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, related_name='+')
     about = models.TextField()
 
     created_at = models.DateTimeField()

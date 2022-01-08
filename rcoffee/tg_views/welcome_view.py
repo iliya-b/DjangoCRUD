@@ -3,6 +3,9 @@ from telebot import types
 from django.utils.translation import gettext as _
 
 from rcoffee.tg_views.tg_view import TgView
+from rcoffee.orm import (
+    create_user
+)
 
 
 class WelcomeView(TgView):
@@ -21,7 +24,11 @@ class WelcomeView(TgView):
         from rcoffee.tg_views.enter_password_view import EnterPasswordView
 
         answer = _('Welcome')
-        self.bot.send_message(self.user_id, answer,
-                              reply_markup=self.keyboard())
 
-        self.change_view(EnterPasswordView, {'is_onboarding': True})
+        user = create_user(self.user_id)
+
+        if not user.teams.exists():
+            self.bot.send_message(self.user_id, answer,
+                                  reply_markup=self.keyboard())
+
+            self.change_view(EnterPasswordView, {'is_onboarding': True})

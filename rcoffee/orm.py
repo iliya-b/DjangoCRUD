@@ -1,6 +1,6 @@
 from django.utils.timezone import now
 
-from .models import User, Pair
+from .models import Team, User, Pair
 from .utils import generate_password
 
 
@@ -24,15 +24,14 @@ def create_user(user_id):
     if not get_user(user_id):
         User.objects.create(
             telegram_id=user_id,
-            password=generate_password(),
             created_at=now()
         )
+    return get_user(user_id)
 
 
-def set_field(user_id, key, value):
-    user = get_user(user_id)
-    setattr(user, key, value)
-    user.save()
+def set_field(object, key, value):
+    setattr(object, key, value)
+    object.save()
 
 
 def create_pair(user_id_a, user_id_b):
@@ -48,3 +47,21 @@ def delete_pairs():
 
 def get_pairs():
     Pair.objects.all()
+
+
+def get_team(name):
+    return Team.objects.filter(name=name).first()
+
+
+def get_team_by_password(password):
+    return Team.objects.filter(password=password).first()
+
+
+def create_team(name, user):
+    if not get_team(name):
+        Team.objects.create(
+            name=name,
+            password=generate_password(),
+            admin=user
+        )
+    return get_team(name)
