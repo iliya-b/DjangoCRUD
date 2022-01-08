@@ -20,7 +20,7 @@ class EnterFieldView(TgView):
             self.user_id, EnterFieldView.messages[self.args['field']])
 
     def onMessage(self, message):
-        from rcoffee.tg_views.main_menu_view import MainMenuView
+        from rcoffee.tg_views.welcome_view import WelcomeView
 
         if self.args.get('is_onboarding') and self.args['field'] == 'name':
             self.bot.send_message(self.user_id, _('Glad to meet you!'))
@@ -28,5 +28,5 @@ class EnterFieldView(TgView):
                              'field': 'link', 'is_onboarding': True})
         elif self.args.get('is_onboarding') and self.args['field'] == 'link':
             self.bot.send_message(self.user_id, _('Done'))
-            
-            self.change_view(MainMenuView)
+
+            self.change_view(WelcomeView)

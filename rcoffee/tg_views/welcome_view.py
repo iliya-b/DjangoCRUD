@@ -11,7 +11,11 @@ class WelcomeView(TgView):
     def commands():
         return {
             'start': WelcomeView.onMessage,
+            'help': WelcomeView.onMessage
         }
+
+    def onStart(self):
+        self.bot.send_message(self.user_id, _('Welcome'))
 
     def onMessage(self, _msg):
         from rcoffee.tg_views.enter_password_view import EnterPasswordView

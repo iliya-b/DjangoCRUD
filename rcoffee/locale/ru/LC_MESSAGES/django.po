@@ -93,4 +93,22 @@ msgstr "Русский"
 
 #: tg_views/welcome_view.py:36
 msgid "Welcome"
-msgstr "Welcome"
+msgstr "Здарова"
+
+msgid "Main menu"
+msgstr "Основное меню"
+
+msgid "Show profile"
+msgstr "Показать профиль"
+
+msgid "Change profile"
+msgstr "Поменять профиль"
+
+msgid "My teams"
+msgstr "Мои команды"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "Main menu"
+msgstr "Меню"
