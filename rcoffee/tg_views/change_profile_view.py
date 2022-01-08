@@ -1,4 +1,5 @@
 from functools import partial
+from django.utils.translation import gettext as _
 
 from telebot import types
 
@@ -27,11 +28,11 @@ class ChangeProfileView(TgView):
         self.change_view(EnterFieldView, {'field': field})
 
     def onStart(self):
-        self.bot.edit_message_text('👉 Поменять данные профиля', self.user_id, self.args['base_message'],
+        self.bot.edit_message_text(_('Change profile data'), self.user_id, self.args['base_message'],
                                    reply_markup=self.keyboard())
 
-    def onMessage(self, _):
-        self.bot.send_message(self.user_id, 'не понял')
+    def onMessage(self, _msg):
+        self.bot.send_message(self.user_id, _('?'))
 
     def keyboard(self):
         keyboard = types.InlineKeyboardMarkup()
@@ -39,23 +40,23 @@ class ChangeProfileView(TgView):
 
         keyboard.add(
             types.InlineKeyboardButton(
-                text='Своё имя',
+                text=_('My name'),
                 callback_data='change_name'
             ),
             types.InlineKeyboardButton(
-                text='Ссылку на социальную сеть',
+                text=_('My social link'),
                 callback_data='change_link'
             ),
             types.InlineKeyboardButton(
-                text='Кем работаю',
+                text=_('Where do I work'),
                 callback_data='change_work'
             ),
             types.InlineKeyboardButton(
-                text='О себе',
+                text=_('About me'),
                 callback_data='change_about'
             ),
             types.InlineKeyboardButton(
-                text='Назад',
+                text=_('Back'),
                 callback_data='back'
             )
         )

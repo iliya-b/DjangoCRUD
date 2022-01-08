@@ -1,13 +1,14 @@
 from functools import partial
 from telebot import types
+from django.utils.translation import gettext as _
 
 from rcoffee.tg_views.tg_view import TgView
 
 
 class WelcomeView(TgView):
     langs = {
-        'en': 'Английский',
-        'ru': 'Русский'
+        'en': _('English'),
+        'ru': _('Russian')
     }
 
     @staticmethod
@@ -31,10 +32,8 @@ class WelcomeView(TgView):
 
         self.change_view(AskPasswordView)
 
-    def onMessage(self, _):
-
-        answer = ('Привет!',
-                  'Какой язык?')
+    def onMessage(self, _msg):
+        answer = _('Hi! What language?')
         self.bot.send_message(self.user_id, answer,
                               reply_markup=self.keyboard())
 
