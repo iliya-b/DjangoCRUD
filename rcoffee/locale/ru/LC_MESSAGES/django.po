@@ -92,5 +92,5 @@ msgid "Russian"
 msgstr "Русский"
 
 #: tg_views/welcome_view.py:36
-msgid "Hi! What language?"
-msgstr "Привет! Какой язык?"
+msgid "Welcome"
+msgstr "Welcome"

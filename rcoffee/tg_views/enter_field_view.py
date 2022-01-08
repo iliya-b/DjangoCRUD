@@ -15,45 +15,18 @@ class EnterFieldView(TgView):
         'link': _('My social link')
     }
 
-    @staticmethod
-    def callbacks():
-        return {
-            'back': EnterFieldView.back
-        }
-
-    def back(self, message):
-        from rcoffee.tg_views.change_profile_view import ChangeProfileView
-        self.change_view(ChangeProfileView, {'base_message': message.id})
-
     def onStart(self):
         self.bot.send_message(
             self.user_id, EnterFieldView.messages[self.args['field']])
 
     def onMessage(self, message):
-        from rcoffee.tg_views.welcome_view import WelcomeView
-        set_field(self.user_id, self.args['field'], message.text)
+        from rcoffee.tg_views.main_menu_view import MainMenuView
 
-        if not self.args.get('is_onboarding', False):
-            self.bot.send_message(self.user_id, _('Done'),
-                                  reply_markup=self.keyboard())
-        elif self.args['field'] == 'name':
+        if self.args.get('is_onboarding') and self.args['field'] == 'name':
             self.bot.send_message(self.user_id, _('Glad to meet you!'))
             self.change_view(EnterFieldView, {
                              'field': 'link', 'is_onboarding': True})
-        else:
-            msg = _('Alright! All done')
-            self.bot.send_message(self.user_id, msg)
-            self.change_view(WelcomeView)
-
-    def keyboard(self) -> Optional[types.InlineKeyboardMarkup]:
-        if not self.args.get('is_onboarding', False):
-            keyboard = types.InlineKeyboardMarkup()
-
-            keyboard.add(
-                types.InlineKeyboardButton(
-                    text=_('Back'),
-                    callback_data='back'
-                )
-            )
-            return keyboard
-        return None
+        elif self.args.get('is_onboarding') and self.args['field'] == 'link':
+            self.bot.send_message(self.user_id, _('Done'))
+            
+            self.change_view(MainMenuView)

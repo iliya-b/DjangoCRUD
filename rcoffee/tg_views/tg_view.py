@@ -50,7 +50,8 @@ class TgView:
 def generate_tg_routes(bot, default_view, callbacks=None, commands=None):
     routes = []  # todo: import all automatically
     from rcoffee.tg_views.welcome_view import WelcomeView
-    from rcoffee.tg_views.ask_password_view import AskPasswordView
+    from rcoffee.tg_views.enter_password_view import EnterPasswordView
+    from rcoffee.tg_views.enter_field_view import EnterFieldView
 
     _locals = locals()
     default_state = json.dumps({'cls': default_view.__name__, 'args': {}})
