@@ -20,7 +20,7 @@ class WelcomeView(TgView):
     def onStart(self):
         self.bot.send_message(self.user_id, _('Welcome'))
 
-    def onMessage(self, _msg):
+    def onMessage(self, message):
         from rcoffee.tg_views.enter_password_view import EnterPasswordView
 
         answer = _('Welcome')
