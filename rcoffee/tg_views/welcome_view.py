@@ -22,6 +22,7 @@ class WelcomeView(TgView):
 
     def onMessage(self, message):
         from rcoffee.tg_views.enter_password_view import EnterPasswordView
+        from rcoffee.tg_views.main_menu_view import MainMenuView
 
         answer = _('Welcome')
 
@@ -32,3 +33,5 @@ class WelcomeView(TgView):
                                   reply_markup=self.keyboard())
 
             self.change_view(EnterPasswordView, {'is_onboarding': True})
+        else:
+            self.change_view(MainMenuView)
