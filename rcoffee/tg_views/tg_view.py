@@ -52,6 +52,7 @@ def generate_tg_routes(bot, default_view, callbacks=None, commands=None):
     from rcoffee.tg_views.welcome_view import WelcomeView
     from rcoffee.tg_views.enter_password_view import EnterPasswordView
     from rcoffee.tg_views.enter_field_view import EnterFieldView
+    from rcoffee.tg_views.main_menu_view import MainMenuView
     from rcoffee.tg_views.show_profile_view import ShowProfileView
     from rcoffee.tg_views.change_profile_view import ChangeProfileView
     from rcoffee.tg_views.change_teams_view import ChangeTeamsView

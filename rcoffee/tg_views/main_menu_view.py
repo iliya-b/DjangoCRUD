@@ -5,10 +5,6 @@ from telebot import types
 from rcoffee.orm import set_field
 from django.utils.translation import gettext as _
 from rcoffee.tg_views.tg_view import TgView
-from rcoffee.tg_views.show_profile_view import ShowProfileView
-from rcoffee.tg_views.change_profile_view import ChangeProfileView
-from rcoffee.tg_views.change_teams_view import ChangeTeamsView
-from rcoffee.tg_views.show_status_view import ShowStatusView
 
 
 class MainMenuView(TgView):
@@ -16,12 +12,28 @@ class MainMenuView(TgView):
     @staticmethod
     def callbacks():
         return {
-            'show_profile': ShowProfileView.onStart,
-            'change_profile': ChangeProfileView.onStart,
-            'show_teams': ChangeTeamsView.onStart,
-            'show_status': ShowStatusView.onStart,
+            'show_profile': MainMenuView.show_profile,
+            'change_profile': MainMenuView.change_profile,
+            'show_teams': MainMenuView.show_teams,
+            'show_status': MainMenuView.show_status,
             'back': MainMenuView.back
         }
+
+    def show_profile(self, message):
+        from rcoffee.tg_views.show_profile_view import ShowProfileView
+        self.change_view(ShowProfileView, {'base_message': message.id})
+
+    def change_profile(self, message):
+        from rcoffee.tg_views.change_profile_view import ChangeProfileView
+        self.change_view(ChangeProfileView, {'base_message': message.id})
+
+    def show_teams(self, message):
+        from rcoffee.tg_views.change_teams_view import ChangeTeamsView
+        self.change_view(ChangeTeamsView, {'base_message': message.id})
+
+    def show_status(self, message):
+        from rcoffee.tg_views.show_status_view import ShowStatusView
+        self.change_view(ShowStatusView, {'base_message': message.id})
 
     def back(self):
         print('back')
