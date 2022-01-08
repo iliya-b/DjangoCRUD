@@ -1,14 +1,13 @@
 from rcoffee.orm import set_field, get_admins, get_user
 from rcoffee.tg_views.tg_view import TgView
 from rcoffee.utils import is_correct_mail
+from django.utils.translation import gettext as _
 
 
 class EnterEmailView(TgView):
 
     def onStart(self):
-        self.bot.send_message(self.user_id,
-                              ('Введи свой корпоративный mail, '
-                               'чтобы получить пароль📧'))
+        self.bot.send_message(self.user_id, _('Enter your corporate email'))
 
     def onMessage(self, message):
         from rcoffee.tg_views.enter_password_view import EnterPasswordView
@@ -25,7 +24,7 @@ class EnterEmailView(TgView):
 
             for admin in admins:
                 answer_to_admin = (
-                    'Новый пользователь!\n'
+                    _('New user') + '\n'
                     f'@{message.from_user.username}\n'
                     f'[{message.from_user.first_name}](tg://user?id={user.telegram_id})\n'
                     f'{user.mail}\n'

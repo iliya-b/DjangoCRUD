@@ -1,6 +1,7 @@
 import json
 
 # Here we have mini-framework on top of telebot
+from django.utils import translation
 
 
 class TgView:
@@ -61,6 +62,7 @@ def generate_tg_routes(bot, default_view, callbacks=None, commands=None):
 
     def callback_handler(call):
         message = call.message
+        translation.activate(call.from_user.language_code)
         name = call.data
         view = get_view(message.chat.id)
         if name in view.callbacks():
@@ -68,12 +70,16 @@ def generate_tg_routes(bot, default_view, callbacks=None, commands=None):
             view.callbacks()[name](view, message)
 
     def command_handler(message):
+        translation.activate(message.from_user.language_code)
+
         name = message.text[1:]
         view = get_view(message.chat.id)
         if name in view.commands():
             view.commands()[name](view, message)
 
     def message_handler(message):
+        translation.activate(message.from_user.language_code)
+
         get_view(message.chat.id)\
             .onMessage(message)
 

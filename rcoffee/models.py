@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from django.utils.translation import gettext as _
 from django.db import models
 from django.db.models import Model
 
@@ -30,10 +30,10 @@ class User(models.Model):
 
     def __repr__(self):
         return (f'{self.name}\n'
-                f'*Профиль:* {self.link}\n\n'
-                f'*Чем занимается:* {self.work}\n'
-                f'*Зацепки для начала разговора:* {self.about}\n\n'
-                f'Напиши собеседнику в Telegram – [{self.name}](tg://user?id={self.telegram_id})')
+                f'*{_("Profile")}:* {self.link}\n\n'
+                f'*{_("Work")}:* {self.work}\n'
+                f'*{_("About")}:* {self.about}\n\n'
+                f'{_("Write to your partner telegram")} – [{self.name}](tg://user?id={self.telegram_id})')
 
     def __str__(self):
         return "User %s (%d)" % (self.name, self.id)

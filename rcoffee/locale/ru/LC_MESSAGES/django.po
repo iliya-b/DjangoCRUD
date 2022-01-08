@@ -1,0 +1,96 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-01-08 13:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: tg_views/ask_password_view.py:9
+msgid "Enter password"
+msgstr "Введи пароль"
+
+#: tg_views/ask_password_view.py:13
+msgid "Correct"
+msgstr "Верно"
+
+#: tg_views/change_profile_view.py:31
+msgid "Change profile data"
+msgstr "Изменить данные профиля"
+
+#: tg_views/change_profile_view.py:35
+msgid "?"
+msgstr "?"
+
+#: tg_views/change_profile_view.py:43 tg_views/enter_field_view.py:12
+msgid "My name"
+msgstr "Свое имя"
+
+#: tg_views/change_profile_view.py:47 tg_views/enter_field_view.py:15
+msgid "My social link"
+msgstr "Ссылку на социальную сеть"
+
+#: tg_views/change_profile_view.py:51 tg_views/enter_field_view.py:14
+msgid "Where do I work"
+msgstr "Где работаю"
+
+#: tg_views/change_profile_view.py:55 tg_views/enter_field_view.py:13
+msgid "About me"
+msgstr "О себе"
+
+#: tg_views/change_profile_view.py:59 tg_views/enter_field_view.py:54
+msgid "Back"
+msgstr "Назад"
+
+#: tg_views/enter_email_view.py:10
+msgid "Enter your corporate email"
+msgstr "Введи свой корпоративный mail, "
+        "чтобы получить пароль📧"
+
+#: tg_views/enter_email_view.py:27
+msgid "New user"
+msgstr "Новый пользователь"
+
+#: tg_views/enter_field_view.py:37
+msgid "Done"
+msgstr "Готово"
+
+#: tg_views/enter_field_view.py:40
+msgid "Glad to meet you!"
+msgstr "Рад познакомиться!)"
+
+#: tg_views/enter_field_view.py:44
+msgid "Alright! All done"
+msgstr "Отлично, все готово!✨\n\n"
+                   "Свою пару для встречи ты будешь узнавать"
+                   " каждый понедельник — сообщение придет в этот чат\n\n"
+                   "Напиши партнеру в Telegram, "
+                   "чтобы договориться о встрече или звонке\n"
+                   "Время и место вы выбираете сами\n\n"
+                   "Если остались вопросы - /help!)"
+
+#: tg_views/welcome_view.py:10
+msgid "English"
+msgstr "Английский"
+
+#: tg_views/welcome_view.py:11
+msgid "Russian"
+msgstr "Русский"
+
+#: tg_views/welcome_view.py:36
+msgid "Hi! What language?"
+msgstr "Привет! Какой язык?"

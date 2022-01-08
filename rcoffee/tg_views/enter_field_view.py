@@ -3,16 +3,16 @@ from typing import Optional
 from telebot import types
 
 from rcoffee.orm import set_field
-import rcoffee.tg_views.change_profile_view
+from django.utils.translation import gettext as _
 from rcoffee.tg_views.tg_view import TgView
 
 
 class EnterFieldView(TgView):
     messages = {
-        'name': 'Как тебя зовут?',
-        'about': 'Напиши о себе',
-        'work': 'Чем ты занимаешься?',
-        'link': 'Пришли ссылку'
+        'name': _('My name'),
+        'about': _('About me'),
+        'work': _('Where do I work'),
+        'link': _('My social link')
     }
 
     @staticmethod
@@ -34,20 +34,14 @@ class EnterFieldView(TgView):
         set_field(self.user_id, self.args['field'], message.text)
 
         if not self.args.get('is_onboarding', False):
-            self.bot.send_message(self.user_id, 'Готово',
+            self.bot.send_message(self.user_id, _('Done'),
                                   reply_markup=self.keyboard())
         elif self.args['field'] == 'name':
-            self.bot.send_message(self.user_id, 'Рад познакомиться!)')
+            self.bot.send_message(self.user_id, _('Glad to meet you!'))
             self.change_view(EnterFieldView, {
                              'field': 'link', 'is_onboarding': True})
         else:
-            msg = ('Отлично, все готово!✨\n\n'
-                   'Свою пару для встречи ты будешь узнавать'
-                   ' каждый понедельник — сообщение придет в этот чат\n\n'
-                   'Напиши партнеру в Telegram, '
-                   'чтобы договориться о встрече или звонке\n'
-                   'Время и место вы выбираете сами\n\n'
-                   'Если остались вопросы - /help!)')
+            msg = _('Alright! All done')
             self.bot.send_message(self.user_id, msg)
             self.change_view(WelcomeView)
 
@@ -57,7 +51,7 @@ class EnterFieldView(TgView):
 
             keyboard.add(
                 types.InlineKeyboardButton(
-                    text='Назад',
+                    text=_('Back'),
                     callback_data='back'
                 )
             )
