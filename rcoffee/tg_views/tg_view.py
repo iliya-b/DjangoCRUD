@@ -27,14 +27,18 @@ class TgView:
     def onStart(self):
         pass
 
-    def onData(self, message):
-        pass
-
     def onMessage(self, message):
         pass
 
     def keyboard(self):
         pass
+
+    def clear_keyboard(self, message, option=''):
+        self.bot.edit_message_text(
+            f'{message.text}\n\n🐱 {option}' if option else message.text,
+            self.user_id,
+            message.id
+        )
 
     def change_view(self, _view, args=None):
         view = _view(self.bot, self.user_id, args)
@@ -44,11 +48,8 @@ class TgView:
 
 def generate_tg_routes(bot, default_view, callbacks=None, commands=None):
     routes = []  # todo: import all automatically
-    from rcoffee.tg_views.change_profile_view import ChangeProfileView
-    from rcoffee.tg_views.enter_email_view import EnterEmailView
-    from rcoffee.tg_views.enter_password_view import EnterPasswordView
-    from rcoffee.tg_views.enter_field_view import EnterFieldView
     from rcoffee.tg_views.welcome_view import WelcomeView
+    from rcoffee.tg_views.ask_password_view import AskPasswordView
 
     _locals = locals()
     default_state = json.dumps({'cls': default_view.__name__, 'args': {}})
