@@ -54,8 +54,6 @@ class TgView:
 
 def generate_tg_routes(bot, default_view, callbacks=None, commands=None):
     routes = []  # todo: import all automatically
-
-    _locals = locals()
     default_state = json.dumps({'cls': default_view.__name__, 'args': {}})
 
     @lru_cache(maxsize=None)
