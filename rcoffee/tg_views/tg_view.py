@@ -67,8 +67,6 @@ def generate_tg_routes(bot, default_view, callbacks=None, commands=None):
         cls = import_view(state['cls'])
         return cls(bot, uid, state['args'])
 
-    get_view.loads = {}
-
     def callback_handler(call):
         message = call.message
         translation.activate(call.from_user.language_code)
