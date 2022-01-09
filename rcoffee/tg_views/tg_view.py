@@ -1,7 +1,12 @@
+import importlib
 import json
 
 # Here we have mini-framework on top of telebot
+from functools import lru_cache
+
 from django.utils import translation
+
+from rcoffee.utils import snake_casify
 
 
 class TgView:
@@ -55,10 +60,18 @@ def generate_tg_routes(bot, default_view, callbacks=None, commands=None):
     _locals = locals()
     default_state = json.dumps({'cls': default_view.__name__, 'args': {}})
 
+    @lru_cache(maxsize=None)
+    def import_view(cls_name):
+        module = importlib.import_module('rcoffee.tg_views.' + snake_casify(cls_name))
+        return getattr(module, cls_name)
+
     def get_view(uid):
         state = bot.get_state(uid) or default_state
         state = json.loads(state)
-        return _locals.get(state['cls'])(bot, uid, state['args'])
+        cls = import_view(state['cls'])
+        return cls(bot, uid, state['args'])
+
+    get_view.loads = {}
 
     def callback_handler(call):
         message = call.message
