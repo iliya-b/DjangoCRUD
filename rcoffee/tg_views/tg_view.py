@@ -19,10 +19,21 @@ class TgView:
     def commands():
         return {}
 
-    def __init__(self, bot, user_id, args=None):
+    def __init__(self, bot, user_id, args: dict = None):
         self.bot = bot
         self.user_id = user_id
-        self.args = args or {}
+
+        class StateDict(dict):
+
+            def __setitem__(s, it, val):
+                super().__setitem__(it, val)
+                self.bot.set_state(self.user_id, repr(self))
+
+            def __delitem__(s, it):
+                super().__delitem__(it)
+                self.bot.set_state(self.user_id, repr(self))
+
+        self.args = StateDict(args or {})
 
     def __repr__(self):
         return json.dumps({
@@ -72,9 +83,11 @@ def generate_tg_routes(bot, default_view):
         translation.activate(call.from_user.language_code)
         name = call.data
         view = get_view(message.chat.id)
+        bot.answer_callback_query(call.id)
         if name in view.callbacks():
-            bot.answer_callback_query(call.id)
             view.callbacks()[name](view, message)
+        elif '*' in view.callbacks():
+            view.callbacks()['*'](view, message, name)
 
     def command_handler(message):
         translation.activate(message.from_user.language_code)
@@ -83,11 +96,13 @@ def generate_tg_routes(bot, default_view):
         view = get_view(message.chat.id)
         if name in view.commands():
             view.commands()[name](view, message)
+        elif '*' in view.commands():
+            view.commands()['*'](view, message, name)
 
     def message_handler(message):
         translation.activate(message.from_user.language_code)
 
-        get_view(message.chat.id)\
+        get_view(message.chat.id) \
             .onMessage(message)
 
     # 1. listening for callbacks
