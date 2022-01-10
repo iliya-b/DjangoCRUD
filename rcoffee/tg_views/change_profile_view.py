@@ -31,7 +31,7 @@ class ChangeProfileView(TgView):
         self.bot.edit_message_text(_('Change profile data'), self.user_id, self.args['base_message'],
                                    reply_markup=self.keyboard())
 
-    def onMessage(self, _msg):
+    def onMessage(self, message):
         self.bot.send_message(self.user_id, _('?'))
 
     def keyboard(self):
