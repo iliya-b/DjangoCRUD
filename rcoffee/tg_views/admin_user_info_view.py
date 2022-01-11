@@ -17,13 +17,33 @@ class AdminUserInfoView(TgView):
         }
 
     def back(self, message):
-        print('back')
+        from rcoffee.tg_views.admin_menu_view import AdminMenuView
+        self.change_view(AdminMenuView, {'base_message': message.id})
 
-    def onStart(self):
-        user = User.objects.get(pk=self.args['user_id'])
+    def _user_info(self, user):
         self.bot.send_message(
             self.user_id, _('Profile') + str(user), reply_markup=self.keyboard()
         )
+
+    def onStart(self):
+        if 'user_id' in self.args:
+            self._user_info(User.objects.get(pk=self.args['user_id']))
+        else:
+            self.bot.edit_message_text(
+                _('Enter user id or name'), self.user_id, self.args['base_message']
+            )
+
+    def onMessage(self, message):
+        admin = get_user(self.user_id)
+        try:
+            id = int(message.text)
+        except ValueError:
+            return
+        user = User.objects.get(telegram_id=id, teams__admin_id__in=[admin.id])
+        if user:
+            self.args['user_id'] = user.id
+
+        self.onStart()
 
     def keyboard(self):
         keyboard = types.InlineKeyboardMarkup()
@@ -31,7 +51,7 @@ class AdminUserInfoView(TgView):
 
         keyboard.add(
             types.InlineKeyboardButton(
-                text=_('Back'),
+                text=_('< Back'),
                 callback_data='back'
             )
         )

@@ -15,6 +15,7 @@ class AdminMenuView(TgView):
         return {
             'back': AdminMenuView.back,
             'get_users': AdminMenuView.get_users,
+            'edit_user': AdminMenuView.edit_user,
             '*': AdminMenuView.select_team
         }
 
@@ -35,15 +36,16 @@ class AdminMenuView(TgView):
         from rcoffee.tg_views.admin_users_view import AdminUsersView
         self.change_view(AdminUsersView, self.args)
 
+    def edit_user(self, message):
+        from rcoffee.tg_views.admin_user_info_view import AdminUserInfoView
+        self.change_view(AdminUserInfoView, {'base_message': message.id})
+
     def _teams(self):
         return Team.objects.filter(admin=get_user(self.user_id))
 
     def onStart(self):
-        print(self._teams().count())
         if self._teams().count() == 1:
-            print('1set')
             self.args['team_id'] = self._teams().first().id
-            print('2set')
 
         self.bot.edit_message_text(_('Admin menu'), self.user_id, self.args.get('base_message'),
                                    reply_markup=self.keyboard())
