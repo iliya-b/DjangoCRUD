@@ -72,11 +72,13 @@ def generate_tg_routes(bot, default_view):
         module = importlib.import_module('rcoffee.tg_views.' + snake_casify(cls_name))
         return getattr(module, cls_name)
 
-    def get_view(uid):
-        state = bot.get_state(uid) or default_state
+    def get_view_from_state(uid, state):
         state = json.loads(state)
         cls = import_view(state['cls'])
         return cls(bot, uid, state['args'])
+
+    def get_view(uid):
+        return get_view_from_state(uid, bot.get_state(uid) or default_state)
 
     def callback_handler(call):
         message = call.message
@@ -84,17 +86,29 @@ def generate_tg_routes(bot, default_view):
         name = call.data
         view = get_view(message.chat.id)
         bot.answer_callback_query(call.id)
+
         if name in view.callbacks():
             view.callbacks()[name](view, message)
         elif '*' in view.callbacks():
             view.callbacks()['*'](view, message, name)
 
     def command_handler(message):
+        """
+        Handler tries to execute command in this way:
+        1. Looking for exact command in the view of the current state
+        2. If there is not, looking for exact command in default view
+        3. If there is not, check whether there is a broadcast (*) handler in the current view
+        4. Then execute the first found command handler. If it is not found, do nothing
+        :param message: message with a command from a user
+        """
         translation.activate(message.from_user.language_code)
-
         name = message.text[1:]
         view = get_view(message.chat.id)
+
         if name in view.commands():
+            view.commands()[name](view, message)
+        elif name in default_view.commands():
+            view = get_view_from_state(message.chat.id, default_state)
             view.commands()[name](view, message)
         elif '*' in view.commands():
             view.commands()['*'](view, message, name)

@@ -55,7 +55,7 @@ class AdminUsersView(TgView):
                                    reply_markup=self.keyboard())
 
     def _user_line(self, user: User):
-        return "(%s)\t%s\t%s" % (user.telegram_id, user.name, _("Info") + (": /info%d" % user.id))
+        return str(user) + " / " + _("Info") + (": /info%d" % user.id)
 
     def keyboard(self):
         count = self._users().count()
