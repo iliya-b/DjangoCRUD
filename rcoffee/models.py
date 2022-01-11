@@ -36,7 +36,7 @@ class User(models.Model):
                 f'{_("Write to your partner telegram")} – [{self.name}](tg://user?id={self.telegram_id})')
 
     def __str__(self):
-        return "User %s (%d)" % (self.name, self.id)
+        return "User (%s) %s %s %s" % (self.telegram_id, self.name, 'active' if self.is_active else 'inactive', 'blocked' if self.is_blocked else '')
 
 
 class Team(models.Model):
