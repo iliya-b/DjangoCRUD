@@ -30,7 +30,7 @@ class AdminUserInfoView(TgView):
             self._user_info(User.objects.get(pk=self.args['user_id']))
         else:
             self.bot.edit_message_text(
-                _('Enter user id or name'), self.user_id, self.args['base_message']
+                _('Enter user id or name:'), self.user_id, self.args['base_message']
             )
 
     def onMessage(self, message):

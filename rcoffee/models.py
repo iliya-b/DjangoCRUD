@@ -17,7 +17,9 @@ class User(models.Model):
     work = models.TextField(blank=True)
     about = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
+    is_blocked = models.BooleanField(default=False)
+    is_super_admin = models.BooleanField(default=False)
     teams = models.ManyToManyField('Team')
 
     created_at = models.DateTimeField(default=datetime.now)
