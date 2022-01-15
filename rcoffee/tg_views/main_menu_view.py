@@ -45,8 +45,15 @@ class MainMenuView(TgView):
         print('back')
 
     def onStart(self):
-        self.bot.send_message(
-            self.user_id, _('Main menu'), reply_markup=self.keyboard())
+        if 'base_message' in self.args:
+            self.bot.edit_message_text(_('Main menu'),
+                                       self.user_id,
+                                       self.args['base_message'],
+                                       reply_markup=self.keyboard())
+        else:
+            self.bot.send_message(
+                self.user_id, _('Main menu'), reply_markup=self.keyboard())
+
 
     def keyboard(self):
         is_admin = Team.objects.filter(admin=get_user(self.user_id)).exists()

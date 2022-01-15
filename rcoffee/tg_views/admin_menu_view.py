@@ -1,4 +1,5 @@
 from datetime import datetime
+from random import shuffle
 from typing import Optional
 
 from telebot import types
@@ -21,8 +22,18 @@ class AdminMenuView(TgView):
             '*': AdminMenuView.select_team
         }
 
-    def get_pairs(self, message):
+    def generate_pairs(self):
+        users = self._team().user_set.filter(is_active=True, is_blocked=False, is_verified=True).all()
+        users = list(users)
+        shuffle(users)
 
+        if len(users) % 2 != 0:
+            users.append(User.objects.get(pk=self.user_id))
+
+        pairs = [(users[i], users[i+1]) for i in range(0, len(users), 2)]
+        print(pairs)
+
+    def get_pairs(self, message):
         pairs = Pair.objects.filter(created_at__week=datetime.now().isocalendar()[1]).all()
 
         def _pair_line(pair):
@@ -33,6 +44,8 @@ class AdminMenuView(TgView):
 
         if pairs:
             self.bot.send_message(self.user_id, "\n".join(map(_pair_line, pairs)))
+        else:
+            self.bot.send_message(self.user_id, _('No pairs on this week'))
 
     def select_team(self, message, call_data):
         try:
@@ -45,7 +58,8 @@ class AdminMenuView(TgView):
                                    reply_markup=self.keyboard())
 
     def back(self, message):
-        print('back')
+        from rcoffee.tg_views.main_menu_view import MainMenuView
+        self.change_view(MainMenuView, {'base_message': message.id,})
 
     def get_users(self, message):
         from rcoffee.tg_views.admin_users_view import AdminUsersView
@@ -57,6 +71,9 @@ class AdminMenuView(TgView):
 
     def _teams(self):
         return Team.objects.filter(admin=get_user(self.user_id))
+
+    def _team(self):
+        return Team.objects.get(pk=self.args['team_id'])
 
     def onStart(self):
         if self._teams().count() == 1:
