@@ -24,7 +24,7 @@ class AdminUsersView(TgView):
     def info(self, message, cmd):
         user_id = int(cmd[4:])
         from rcoffee.tg_views.admin_user_info_view import AdminUserInfoView
-        self.change_view(AdminUserInfoView, {'user_id': user_id})
+        self.change_view(AdminUserInfoView, {'user_id': user_id, 'team_id': self.args['team_id']})
 
     def _users(self):
         return User.objects.filter(teams__in=[self.args['team_id']])

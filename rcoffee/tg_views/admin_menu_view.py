@@ -1,8 +1,9 @@
+from datetime import datetime
 from typing import Optional
 
 from telebot import types
 
-from rcoffee.models import Team, User
+from rcoffee.models import Team, User, Pair
 from rcoffee.orm import set_field, get_user
 from django.utils.translation import gettext as _
 from rcoffee.tg_views.tg_view import TgView
@@ -16,8 +17,22 @@ class AdminMenuView(TgView):
             'back': AdminMenuView.back,
             'get_users': AdminMenuView.get_users,
             'edit_user': AdminMenuView.edit_user,
+            'get_pairs': AdminMenuView.get_pairs,
             '*': AdminMenuView.select_team
         }
+
+    def get_pairs(self, message):
+
+        pairs = Pair.objects.filter(created_at__week=datetime.now().isocalendar()[1]).all()
+
+        def _pair_line(pair):
+            s = "%s & %s" % (pair.user_a.name if pair.user_a else "?", pair.user_b.name if pair.user_b else "?")
+            if pair.feedback_a or pair.feedback_b:
+                s += '(' + _('Got feedback') + ')'
+            return s
+
+        if pairs:
+            self.bot.send_message(self.user_id, "\n".join(map(_pair_line, pairs)))
 
     def select_team(self, message, call_data):
         try:
@@ -38,7 +53,7 @@ class AdminMenuView(TgView):
 
     def edit_user(self, message):
         from rcoffee.tg_views.admin_user_info_view import AdminUserInfoView
-        self.change_view(AdminUserInfoView, {'base_message': message.id})
+        self.change_view(AdminUserInfoView, {'base_message': message.id, 'team_id': self.args['team_id']})
 
     def _teams(self):
         return Team.objects.filter(admin=get_user(self.user_id))

@@ -59,7 +59,9 @@ class Pair(models.Model):
         User, on_delete=models.SET_NULL, null=True, related_name='+')
     user_b = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, related_name='+')
-    about = models.TextField()
+    about = models.TextField(null=True)
+    feedback_a = models.TextField(null=True)
+    feedback_b = models.TextField(null=True)
 
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

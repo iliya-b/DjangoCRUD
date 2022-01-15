@@ -1,4 +1,4 @@
-from django.db.models import F, Func
+from django.db.models import F, Func, Model
 from telebot import types
 from telebot.apihelper import ApiTelegramException
 
@@ -39,11 +39,13 @@ class AdminUserInfoView(TgView):
         text = _('Profile') + str(user)
         if base_message:
             self.bot.edit_message_text(
-                text, self.user_id, base_message, reply_markup=self.keyboard()
+                text, self.user_id, base_message,
+                reply_markup=self.keyboard()
             )
         else:
             self.bot.send_message(
-                self.user_id, text, reply_markup=self.keyboard()
+                self.user_id, text,
+                reply_markup=self.keyboard()
             )
 
     def _user(self):
@@ -53,21 +55,21 @@ class AdminUserInfoView(TgView):
         if 'user_id' in self.args:
             self._user_info(self._user())
         else:
-            self.bot.edit_message_text(
-                _('Enter user id or name:'),
+            self.bot.send_message(
                 self.user_id,
-                self.args['base_message']
+                _('Enter user id:'),
             )
 
     def onMessage(self, message):
-        admin = get_user(self.user_id)
         try:
             id = int(message.text)
-        except ValueError:
-            return
-        user = User.objects.get(telegram_id=id, teams__admin_id__in=[admin.id])
-        if user:
+            user = User.objects.get(telegram_id=id, teams__id__in=[self.args['team_id']])
             self.args['user_id'] = user.id
+        except (ValueError, User.DoesNotExist):
+            self.bot.send_message(
+                self.user_id,
+                _('User not found!'),
+            )
 
         self.onStart()
 
