@@ -27,11 +27,16 @@ class AdminMenuView(TgView):
         users = list(users)
         shuffle(users)
 
-        if len(users) % 2 != 0:
-            users.append(User.objects.get(pk=self.user_id))
+        if len(users) % 2 != 0:  # remove or append admin to get even count of participants
+            admin = User.objects.get(pk=self.user_id)
+            if admin in users:
+                users.remove(admin)
+            else:
+                users.append(admin)
 
         pairs = [(users[i], users[i+1]) for i in range(0, len(users), 2)]
         print(pairs)
+
 
     def get_pairs(self, message):
         pairs = Pair.objects.filter(created_at__week=datetime.now().isocalendar()[1]).all()

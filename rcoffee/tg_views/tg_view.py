@@ -115,9 +115,24 @@ def generate_tg_routes(bot, default_view):
 
     def message_handler(message):
         translation.activate(message.from_user.language_code)
-
         get_view(message.chat.id) \
             .onMessage(message)
+
+    def member_handler(event):
+        from rcoffee.models import User
+        try:
+            user = User.objects.get(telegram_id=event.chat.id)
+        except:
+            return
+
+        if event.old_chat_member.status == 'kicked':
+            print('rejoin')
+            user.is_active = True
+            user.save()
+        else:
+            print('quit')
+            user.is_active = False
+            user.save()
 
     # 1. listening for callbacks
     dec = bot.callback_query_handler(func=lambda call: True)
@@ -130,4 +145,8 @@ def generate_tg_routes(bot, default_view):
     # 3. listening for other messages
     dec = bot.message_handler(state='*')
     routes.append(dec(message_handler))
+
+    # 4. listening for bot kicking/starting
+    dec = bot.my_chat_member_handler()
+    routes.append(dec(member_handler))
     return routes
