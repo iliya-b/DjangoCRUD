@@ -2,7 +2,8 @@ from typing import Optional
 
 from telebot import types
 
-from rcoffee.orm import set_field
+from rcoffee.models import Team, User
+from rcoffee.orm import set_field, get_user
 from django.utils.translation import gettext as _
 from rcoffee.tg_views.tg_view import TgView
 
@@ -16,8 +17,13 @@ class MainMenuView(TgView):
             'change_profile': MainMenuView.change_profile,
             'show_teams': MainMenuView.show_teams,
             'show_status': MainMenuView.show_status,
+            'show_admin': MainMenuView.show_admin,
             'back': MainMenuView.back
         }
+
+    def show_admin(self, message):
+        from rcoffee.tg_views.admin_menu_view import AdminMenuView
+        self.change_view(AdminMenuView, {'base_message': message.id})
 
     def show_profile(self, message):
         from rcoffee.tg_views.show_profile_view import ShowProfileView
@@ -35,17 +41,33 @@ class MainMenuView(TgView):
         from rcoffee.tg_views.show_status_view import ShowStatusView
         self.change_view(ShowStatusView, {'base_message': message.id})
 
-    def back(self):
+    def back(self, message):
         print('back')
 
     def onStart(self):
-        self.bot.send_message(
-            self.user_id, _('Main menu'), reply_markup=self.keyboard())
+        if 'base_message' in self.args:
+            self.bot.edit_message_text(_('Main menu'),
+                                       self.user_id,
+                                       self.args['base_message'],
+                                       reply_markup=self.keyboard())
+        else:
+            self.bot.send_message(
+                self.user_id, _('Main menu'), reply_markup=self.keyboard())
+
 
     def keyboard(self):
+        is_admin = Team.objects.filter(admin=get_user(self.user_id)).exists()
+
         keyboard = types.InlineKeyboardMarkup()
         keyboard.row_width = 1
 
+        if is_admin:
+            keyboard.add(
+                types.InlineKeyboardButton(
+                    text=_('Admin'),
+                    callback_data='show_admin'
+                ),
+            )
         keyboard.add(
             types.InlineKeyboardButton(
                 text=_('Show profile'),

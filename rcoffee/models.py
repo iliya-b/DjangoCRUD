@@ -17,7 +17,9 @@ class User(models.Model):
     work = models.TextField(blank=True)
     about = models.TextField(blank=True)
     is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
+    is_blocked = models.BooleanField(default=False)
+    is_super_admin = models.BooleanField(default=False)
     teams = models.ManyToManyField('Team')
 
     created_at = models.DateTimeField(default=datetime.now)
@@ -34,7 +36,7 @@ class User(models.Model):
                 f'{_("Write to your partner telegram")} – [{self.name}](tg://user?id={self.telegram_id})')
 
     def __str__(self):
-        return "User %s (%d)" % (self.name, self.id)
+        return "User (%s) %s %s %s" % (self.telegram_id, self.name, 'active' if self.is_active else 'inactive', 'blocked' if self.is_blocked else '')
 
 
 class Team(models.Model):
@@ -57,7 +59,9 @@ class Pair(models.Model):
         User, on_delete=models.SET_NULL, null=True, related_name='+')
     user_b = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, related_name='+')
-    about = models.TextField()
+    about = models.TextField(null=True)
+    feedback_a = models.TextField(null=True)
+    feedback_b = models.TextField(null=True)
 
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
